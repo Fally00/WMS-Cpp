@@ -1,0 +1,32 @@
+# Warehouse Management System (WMS) 👨‍💻
+
+A console-based warehouse/inventory management system written in C++:
+- Supports item add/remove/search/list
+- Supports a task queue for batch operations (ADD, REMOVE, SEARCH, LIST)
+- Data persistence via CSV (easy to switch to JSON if needed)
+- Simple file-based storage
+- Clean console interface with ASCII banner & color output
+- Configurable Auto-Save and optional queue mode
+
+## 🔧 Features
+
+- Add / remove / search / list items  
+- Queue mode: enqueue operations and process later (good for batch processing)  
+- Auto-save toggle — automatic persistence after each operation  
+- CSV-based storage  
+- Simple, extendable codebase: Inventory, Item, Storage, Controller modular architecture  
+- ANSI-colored console UI + ASCII banner for nicer user experience
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- A C++ compiler (g++ with C++17 support recommended)  
+- On Windows: MSYS2 / MinGW or similar environment  
+- On Unix-based OS: GCC / clang  
+
+### Build & Run
+
+```bash
+g++ main.cpp WmsControllers.cpp Inventory.cpp Item.cpp Storage.cpp -o wms.exe
+that command to link all files and get them into one wms.exe program which the one u will use to run and be able to run the program 
