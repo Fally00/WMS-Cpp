@@ -2,6 +2,7 @@
 #define WMSCONTROLLERS_H
 #include "Inventory.h"
 #include "Storage.h"
+#include "Receipt.h"
 #include <string>
 #include <queue>
 

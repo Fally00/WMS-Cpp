@@ -1,10 +1,11 @@
 #include "Receipt.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <vector>
 #include <string>
 
-
+// Add an item to the receipt
 void Receipt::addItem(const Item& item, int quantity) {
     for (auto& receiptItem : items) {
         if (receiptItem.id == item.getId()) {
@@ -13,5 +14,37 @@ void Receipt::addItem(const Item& item, int quantity) {
         }
     }
     items.push_back({item.getId(), item.getName(), quantity});
+}
+
+
+
+// Print the receipt to console
+void Receipt::print() const {
+    std::cout << "===== RECEIPT =====\n";
+    for (const auto& receiptItem : items) {
+        std::cout << "ID: " << receiptItem.id
+                  << " | Name: " << receiptItem.name
+                  << " | Quantity: " << receiptItem.quantity << "\n";
+    }
+    std::cout << "===================\n";
+}
+void Receipt::clear() {
+    items.clear();
+}
+
+
+// Save receipt to a file in CSV format
+void Receipt::saveToFile(const std::string& filename) const {
+    std::ofstream outFile(filename);
+    if (!outFile) {
+        std::cerr << "Error opening file for writing: " << filename << "\n";
+        return;
+    }
+    for (const auto& receiptItem : items) {
+        outFile << receiptItem.id << ","
+                << receiptItem.name << ","
+                << receiptItem.quantity << "\n";
+    }
+    outFile.close();
 }
 
