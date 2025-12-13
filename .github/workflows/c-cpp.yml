@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Simple C++ Build
 
 on:
   push:
@@ -8,16 +8,16 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+
+    - name: Compile Code
+      # This tries to compile all .cpp files into an executable named 'wms'
+      run: g++ -o wms *.cpp
+
+    - name: Run Test (Optional)
+      # Only keep this if your program runs and exits immediately. 
+      # If it waits for user input, remove this step!
+      run: ./wms
