@@ -195,7 +195,7 @@ int main() {
 
                 receipt.addItem(*item, quantity);
                 item->updateQuantity(-quantity);
-                cout << "Added to receipt.\n";
+                cout << "Added to receipt.\n";     // there is error in the non stopping loop i need to check it later 
             }
 
             receipt.print();
