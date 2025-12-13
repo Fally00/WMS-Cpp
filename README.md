@@ -37,13 +37,13 @@ You can run the existing wms.exe directly. However, if you have modified the cod
 
 To compile the project manually:
 
+'''bash
 g++ main.cpp WmsControllers.cpp Inventory.cpp Item.cpp Storage.cpp Receipt.cpp -o wms.exe
 (Make sure to include Receipt.cpp if you have created a source file for the new receipt system!)
 
 To run the application:
 
-Bash
-
+'''bash
 ./wms.exe
 📂 Project Structure
 main.cpp: Entry point of the application.
