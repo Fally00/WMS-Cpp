@@ -1,10 +1,14 @@
-                         📦 Warehouse Management System (WMS) — C++
+  📦 Warehouse Management System (WMS) — C++
+
+
 
 
 A modular, console-based Warehouse Management System written in modern C++ (C++17).
 Built to be efficient, extensible, and readable, this project demonstrates solid architecture, clean separation of concerns, and practical systems programming concepts.
 
 Think real-world inventory logic, minus enterprise bloat.
+
+
 
 --> ✨ Key Highlights
 
@@ -19,6 +23,9 @@ Think real-world inventory logic, minus enterprise bloat.
 5- 💾 CSV Persistence — Lightweight, configurable data storage
 
 6- 🎨 Console UI — ANSI colors + ASCII banners for extra drip
+
+
+
 
 --> 🔧 Features
 
@@ -66,6 +73,9 @@ Receipt → Transaction logging
 
 WmsControllers → User input & coordination
 
+
+
+
 --> 🛠️ Getting Started
 📌 Prerequisites
 
@@ -77,6 +87,8 @@ Windows (MinGW / MSYS2)
 
 Linux
 
+
+
 ```
 --> 📂 Project Structure
 .
@@ -87,10 +99,13 @@ Linux
 ├── Storage.*             # CSV persistence
 ├── Receipt.*             # Receipt & transaction logging
 
-🪄 Build & Run
+```
+
+--> 🪄 Build & Run
+
+
 ▶️ Quick Run (Windows)
 
-```bash
 If you just want to run it:
 
 wms.exe
@@ -98,16 +113,20 @@ wms.exe
 🔨 Build From Source
 
 If you’ve modified the code or want a clean build:
-
+```
 g++ main.cpp WmsControllers.cpp Inventory.cpp Item.cpp Storage.cpp Receipt.cpp -o wms.exe
+```
 
-
-⚠️ Important:
+--> ⚠️ Important:
 If you’re using the receipt system, make sure Receipt.cpp is included or the linker will choose violence.
 
-▶️ Run
+
+
+-->▶️ Run
 ./wms.exe
 
+
+```
 📌 Versioning
 
 Current Version: v1.1.0
