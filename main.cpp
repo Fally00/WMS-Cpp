@@ -190,7 +190,7 @@ int main() {
 
                 if (quantity > item->quantity) {
                     cout << "Not enough stock available.\n";
-                    continue;
+                    break;
                 }
 
                 receipt.addItem(*item, quantity);
@@ -201,6 +201,7 @@ int main() {
             receipt.print();
             receipt.saveToFile("receipt.csv");
             cout << "Receipt saved to 'receipt.csv'.\n";
+            break;
         }
 
 
