@@ -1,4 +1,5 @@
 #include "Inventory.h"
+#include "Item.h"
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -14,17 +15,18 @@ Inventory::Inventory(const std::string &filePath) : dataFilePath(filePath) {}
 
 
 // ─────────────────────────────────────────────
-// Load data from CSV string
+// Load data from CSV string (Updated)
 // ─────────────────────────────────────────────
 void Inventory::fromCSV(const std::string &csvData) {
-    stringstream ss(csvData);
-    string line;
-    while (getline(ss, line)) {
-        Item item;
-        item.fromCSV(line);
-        items.push_back(item);
+    std::stringstream ss(csvData);
+    std::string line;
+
+    while (std::getline(ss, line)) {
+        if (line.empty()) continue;
+        items.push_back(Item::fromCSV(line));
     }
 }
+
 
 
 // ─────────────────────────────────────────────
@@ -42,12 +44,13 @@ string Inventory::toCSV(const string& /*filePath*/) const {
 // ─────────────────────────────────────────────
 // Display all items
 // ─────────────────────────────────────────────
-void Inventory::displayAllItems() const {
+void Inventory::displayItems() const {
     for (const auto &item : items) {
-        item.displayItem();
-        cout << "------------------" << endl;
+        printItem(item);
+        std::cout << "------------------\n";
     }
 }
+
 
 
 // ─────────────────────────────────────────────
@@ -59,11 +62,11 @@ void Inventory::addItem(const Item &item) {
 
 
 // ─────────────────────────────────────────────
-// Find item by ID (Linear Search)
+// Find item by ID (updated linear search)
 // ─────────────────────────────────────────────
 Item* Inventory::findItem(int itemId) {
     for (auto &item : items) {
-        if (item.id == itemId)
+        if (item.getId() == itemId)
             return &item;
     }
     return nullptr;
@@ -72,11 +75,11 @@ Item* Inventory::findItem(int itemId) {
 
 
 // ─────────────────────────────────────────────
-// Remove item by ID
+// Remove item by ID (updated linear search)
 // ─────────────────────────────────────────────
 void Inventory::removeItem(int itemId) {
-    auto it = std::find_if(items.begin(), items.end(), 
-        [&](const Item &item) { return item.id == itemId; });
+   auto it = std::find_if(items.begin(), items.end(),
+    [&](const Item &item) { return item.getId() == itemId; });
 
     if (it != items.end())
         items.erase(it);
@@ -87,26 +90,32 @@ void Inventory::removeItem(int itemId) {
 // Sort by ID
 // ─────────────────────────────────────────────
 void Inventory::sortByID() {
-    sort(items.begin(), items.end(),
-         [](const Item &a, const Item &b) { return a.id < b.id; });
+    std::sort(items.begin(), items.end(),
+        [](const Item &a, const Item &b) {
+            return a.getId() < b.getId();
+        });
 }
-
 
 // ─────────────────────────────────────────────
 // Sort by name
 // ─────────────────────────────────────────────
 void Inventory::sortByName() {
-    sort(items.begin(), items.end(),
-         [](const Item &a, const Item &b) { return a.name < b.name; });
+    std::sort(items.begin(), items.end(),
+        [](const Item &a, const Item &b) {
+            return a.getName() < b.getName();
+        });
 }
+
 
 
 // ─────────────────────────────────────────────
 // Sort by quantity
 // ─────────────────────────────────────────────
 void Inventory::sortByQuantity() {
-    sort(items.begin(), items.end(),
-         [](const Item &a, const Item &b) { return a.quantity < b.quantity; });
+    std::sort(items.begin(), items.end(),
+        [](const Item &a, const Item &b) {
+            return a.getQuantity() < b.getQuantity();
+        });
 }
 
 
@@ -114,6 +123,8 @@ void Inventory::sortByQuantity() {
 // Sort by location
 // ─────────────────────────────────────────────
 void Inventory::sortByLocation() {
-    sort(items.begin(), items.end(),
-         [](const Item &a, const Item &b) { return a.location < b.location; });
+    std::sort(items.begin(), items.end(),
+        [](const Item &a, const Item &b) {
+            return a.getLocation() < b.getLocation();
+        });
 }

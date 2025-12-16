@@ -117,7 +117,7 @@ int main() {
             try {
                 int itemId = stoi(id);
                 auto *x = wms.searchItemInInventory(itemId);
-                if (x) cout << "\n[FOUND]\n", x->displayItem();
+                if (x) cout << "\n[FOUND]\n", printItem(const_cast<const Item&>(*x));
                 else   cout << "\n[NOT FOUND]\n";
             } catch (...) {
                 cout << "Invalid ID.\n";
@@ -188,16 +188,16 @@ int main() {
                 int quantity;
                 cin >> quantity; clearInput();
 
-                if (quantity > item->quantity) {
+                if (quantity > item->getQuantity()) {
                     cout << "Not enough stock available.\n";
                     break;
                 }
 
                 receipt.addItem(*item, quantity);
-                item->updateQuantity(-quantity);
+                item->changeQuantity(-quantity);
                 cout << "Added to receipt.\n";     // there is error in the non stopping loop i need to check it later 
             }
-
+ 
             receipt.print();
             receipt.saveToFile("receipt.csv");
             cout << "Receipt saved to 'receipt.csv'.\n";

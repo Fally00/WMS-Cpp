@@ -1,4 +1,7 @@
 #include "WmsControllers.h"
+#include "Inventory.h"
+#include "Storage.h"
+#include "Item.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -64,7 +67,7 @@ Item* WmsControllers::searchItemInInventory(int itemId) {
 }
 
 void WmsControllers::listInventoryItems() {
-    inventory.displayAllItems();
+    inventory.displayItems();
 }
 
 
@@ -130,7 +133,7 @@ void WmsControllers::processTasks() {
 
         //======================================================= LIST
         else if (tokens[0] == "LIST") {
-            inventory.displayAllItems();
+            inventory.displayItems();
         }
 
         //======================================================= SEARCH
@@ -143,7 +146,7 @@ void WmsControllers::processTasks() {
                 continue;
             }
             Item* i = inventory.findItem(id);
-            if (i) { cout << "\n[FOUND]\n"; i->displayItem(); }
+            if (i) { cout << "\n[FOUND]\n"; printItem(const_cast<const Item&>(*i)); }
             else cout << "[NOT FOUND]\n";
         }
 
