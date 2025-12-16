@@ -1,5 +1,4 @@
-#ifndef WMSCONTROLLERS_H
-#define WMSCONTROLLERS_H
+#pragma once
 #include "Inventory.h"
 #include "Storage.h"
 #include "Receipt.h"
@@ -27,4 +26,3 @@ public:
     void listInventoryItems();
 };
 
-#endif

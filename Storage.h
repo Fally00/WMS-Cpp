@@ -1,5 +1,4 @@
-#ifndef STORAGE_H
-#define STORAGE_H
+#pragma once
 #include <string>
 #include <vector>
 
@@ -24,4 +23,3 @@ public:
     // Clear all file content
     bool clear() const;
 };
-#endif 
