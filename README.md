@@ -11,7 +11,7 @@ This isn’t just toy code — it’s a system redesigned from the ground up wit
 ```
 poured actual craft into this release — and it shows! This version includes:
 ```
-##Major Improvements##
+## Major Improvements ##
 
 -- Redesigned architecture to make modules more independent and testable
 
@@ -29,26 +29,26 @@ poured actual craft into this release — and it shows! This version includes:
 
 This is not your average “hello world” example — it’s a serious inventory system with a foundation for expansion.
 
-##Core Features##
+## Core Features ##
 
-##Inventory Management##
+## --> Inventory Management ##
 
 --Track items, quantities, metadata and search inventory efficiently. 
 
 
-##Receipt System##
+## --> Receipt System ##
 --Generate, queue, and print receipts for transactions — stateful and persistent. 
 
 
-## Batch Processing##
+## --> Batch Processing ##
 --Queue up multiple operations to run sequentially — simulating real warehouse tasks. 
 
 
-##Data Persistence##
+##--> Data Persistence ##
 --CSV‑based storage that loads and saves inventory automatically. 
 
 
-##Console UI##
+## --> Console UI ##
 --ANSI‑colored, menu‑driven UX for exploring features without digging into code. 
 
 
