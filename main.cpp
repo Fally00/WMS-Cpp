@@ -38,6 +38,7 @@ int main() {
                                         )";
     cout<< MAGENTA <<logo << std::endl;
     cout << WHITE << "      WAREHOUSE MANAGEMENT SYSTEM v1.2" << RESET << endl;
+    cout << MAGENTA << "           Devoloped by Rayan Hisham & Abdulrahman Shaalan" << RESET << endl;
 
     WmsControllers wms("inventory_data.csv");
     wms.initializeSystem();
