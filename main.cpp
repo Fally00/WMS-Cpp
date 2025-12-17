@@ -43,7 +43,7 @@ int main() {
     WmsControllers wms("inventory_data.csv");
     wms.initializeSystem();
     if (!wms.initializeSystem()) {
-        cerr << "[ERROR 404] System initialization failed." << endl;
+        cerr << RED << "[ERROR 404] System initialization failed." << endl;
         return 1;
     }
 
@@ -76,7 +76,7 @@ int main() {
 
         if (!(cin >> choice)) {
             clearInput();
-            cout << "\n[ERROR 303] Invalid number.\n";
+            cout << RED << "\n[ERROR 303] Invalid number.\n";
             continue;
         }
         clearInput(); // reset input buffer for getline use
@@ -97,7 +97,7 @@ int main() {
             try {
                 numericId = stoi(id);
             } catch (...) {
-                cout << "Invalid ID. Must be a number.\n";
+                cout << RED << "Invalid ID. Must be a number.\n";
                 break;
             }
 
@@ -126,7 +126,7 @@ int main() {
                 wms.removeItem(itemId);
                 if (autosave) wms.saveAll();
             } catch (...) {
-                cout << "Invalid ID.\n";
+                cout << RED << "Invalid ID.\n";
             }
         }
 
