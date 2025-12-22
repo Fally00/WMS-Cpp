@@ -28,7 +28,7 @@ poured actual craft into this release — and it shows! This version includes:
 -- Path paved for future GUI, DB, or web interface support
 
 This is not your average “hello world” example — it’s a serious inventory system with a foundation for expansion.
-
+```
 ## Core Features ##
 
 ## --> Inventory Management ##
@@ -49,8 +49,10 @@ This is not your average “hello world” example — it’s a serious inventor
 
 
 ## --> Console UI ##
---ANSI‑colored, menu‑driven UX for exploring features without digging into code. 
+--ANSI‑colored, menu‑driven UX for exploring features without digging into code.
 
+![System showcase](assest/wmsx.png)
+```
 
 ---
 ```
