@@ -11,6 +11,8 @@ This isn’t just toy code — it’s a system redesigned from the ground up wit
 ```
 poured actual craft into this release — and it shows! This version includes:
 ```
+![System showcase](assest/wmsx.png)
+
 ## Major Improvements ##
 
 -- Redesigned architecture to make modules more independent and testable
@@ -53,7 +55,7 @@ This is not your average “hello world” example — it’s a serious inventor
 
 
 ```
-![System showcase](assest/wmsx.png)
+
 ---
 ```
 ## 🗂️ Project Structure
