@@ -30,7 +30,7 @@ void OutputFormatter::printError(const std::string& message) {
 // Print warning message
 // ─────────────────────────────────────────────
 void OutputFormatter::printWarning(const std::string& message) {
-    std::cout << YELLOW << "ERROR [404] " << message << RESET << std::endl;
+    std::cout << YELLOW << "WARNING " << message << RESET << std::endl;
 }
 
 // ─────────────────────────────────────────────
@@ -166,10 +166,4 @@ void OutputFormatter::printHelp() {
     std::cout << "  -v, --version                          Show version information" << std::endl;
     std::cout << "  --autosave                             Enable autosave after operations" << std::endl;
 
-
-    std::cout << "\n" << BOLD << "EXAMPLES:" << RESET << std::endl;
-    std::cout << "  wms add \"Laptop\" 5 999.99" << std::endl;
-    std::cout << "  wms find \"Laptop\"" << std::endl;
-    std::cout << "  wms list" << std::endl;
-    std::cout << "  wms queue add \"Mouse\" 10 25.50 && wms process" << std::endl;
 }

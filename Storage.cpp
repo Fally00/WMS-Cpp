@@ -1,3 +1,12 @@
+/**
+ * @file Storage.cpp
+ * @brief Implementation of the Storage class for file operations.
+ *
+ * This file contains the implementation of methods for the Storage class,
+ * providing functionality for initializing, reading, writing, and managing
+ * file-based storage in the Warehouse Management System.
+ */
+
 #include "Storage.h"
 #include <fstream>
 #include <filesystem>
@@ -5,13 +14,17 @@
 #include <vector>
 using namespace std;
 
+/**
+ * @brief Constructs a Storage object with the specified file path.
+ * @param filePath The path to the file used for storage.
+ */
 Storage::Storage(const std::string& filePath) : dataFilePath(filePath) {}
 
 
 // ─────────────────────────────────────────────
 // Create storage file if not found
 // ─────────────────────────────────────────────
-bool Storage::intializeStorage() {
+bool Storage::initializeStorage() {
     if (!fileExists()) {
         ofstream outFile(dataFilePath);
         if (!outFile) return false;
