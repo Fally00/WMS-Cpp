@@ -11,7 +11,7 @@ This isn’t just toy code — it’s a system redesigned from the ground up wit
 ```
 poured actual craft into this release — and it shows! This version includes:
 ```
-![System showcase](assest/wmsx.png)
+![System showcase](assest/wms1.3.0.png)
 
 ## Major Improvements ##
 
@@ -108,18 +108,18 @@ How It Works
 
 ### Compile
 ```bash
-g++ main.cpp WmsControllers.cpp Inventory.cpp Item.cpp Storage.cpp Receipt.cpp -o wms.exe
+g++ -o wms-x  main.cpp cli.cpp output.cpp Inventory.cpp Item.cpp Receipt.cpp Storage.cpp WmsControllers.cpp  
 ```
 
 **Current Status**
 ```
 Component	Status
-Inventory system	-->   ✅ Stable
+CLI                 -->   🟡 Functional
 Receipt generation  -->	  🟡 Functional
+CSV persistence	    -->   🟡 Functional
 Batch queue	        -->   🟠 Improved
-CSV persistence	    -->   🟡 Working
+Inventory system	-->   ✅ Stable
 Input validation	-->   ✅ done
 Unit tests	        -->   🧪 Planned
 Database support    -->   🔜 Future
-CLI                 -->   🔜 Future
 ```
