@@ -20,13 +20,22 @@ using namespace std;
 int runInteractiveMode();
 void printItem(const Item& item);
 
-// Helper function to print an item
+/**
+ * @brief Prints detailed information about an item
+ * @param item The item to display information for
+ */
 void printItem(const Item& item) {
     cout << "ID: " << item.getId() << ", Name: " << item.getName()
          << ", Quantity: " << item.getQuantity() << ", Location: " << item.getLocation() << endl;
 }
 
-// Helper function to safely parse integers
+/**
+ * @brief Safely parses a string to integer with error handling
+ * @param str The string to convert to integer
+ * @param paramName The parameter name for error messages
+ * @return The parsed integer value
+ * @throws invalid_argument if string cannot be converted
+ */
 int parseInt(const string& str, const string& paramName) {
     try {
         return stoi(str);
@@ -36,7 +45,13 @@ int parseInt(const string& str, const string& paramName) {
     }
 }
 
-// Helper function to validate argument count
+/**
+ * @brief Validates the number of arguments against expected count
+ * @param options The CLI options containing arguments
+ * @param expectedCount The minimum number of arguments required
+ * @param usage The usage string to display if validation fails
+ * @return True if validation passes, false otherwise
+ */
 bool validateArgCount(const CLIOptions& options, size_t expectedCount, const string& usage) {
     if (options.positionalArgs.size() < expectedCount) {
         OutputFormatter::printError("Usage: " + usage);
@@ -45,7 +60,13 @@ bool validateArgCount(const CLIOptions& options, size_t expectedCount, const str
     return true;
 }
 
-// Separate handler functions for better organization
+/**
+ * @brief Handles the 'add' command to add new items to inventory
+ * @param wms Reference to the WMS controller
+ * @param options The CLI options containing command arguments
+ * @param autosave Flag indicating whether to save after operation
+ * @return 0 on success, 1 on failure
+ */
 int handleAdd(WmsControllers& wms, const CLIOptions& options, bool autosave) {
     if (!validateArgCount(options, 4, "wms add <id> <name> <quantity> <location>")) {
         return 1;
@@ -76,6 +97,13 @@ int handleAdd(WmsControllers& wms, const CLIOptions& options, bool autosave) {
     return 0;
 }
 
+/**
+ * @brief Handles the 'remove' command to remove items from inventory
+ * @param wms Reference to the WMS controller
+ * @param options The CLI options containing command arguments
+ * @param autosave Flag indicating whether to save after operation
+ * @return 0 on success, 1 on failure
+ */
 int handleRemove(WmsControllers& wms, const CLIOptions& options, bool autosave) {
     if (!validateArgCount(options, 1, "wms remove <id>")) {
         return 1;
@@ -96,6 +124,12 @@ int handleRemove(WmsControllers& wms, const CLIOptions& options, bool autosave) 
     return 0;
 }
 
+/**
+ * @brief Handles the 'find' command to search for items in inventory
+ * @param wms Reference to the WMS controller
+ * @param options The CLI options containing command arguments
+ * @return 0 on success, 1 on failure
+ */
 int handleFind(WmsControllers& wms, const CLIOptions& options) {
     if (!validateArgCount(options, 1, "wms find <id>")) {
         return 1;
@@ -117,6 +151,12 @@ int handleFind(WmsControllers& wms, const CLIOptions& options) {
     return 0;
 }
 
+/**
+ * @brief Handles the 'queue' command to queue operations for later processing
+ * @param wms Reference to the WMS controller
+ * @param options The CLI options containing command arguments
+ * @return 0 on success, 1 on failure
+ */
 int handleQueue(WmsControllers& wms, const CLIOptions& options) {
     if (options.positionalArgs.empty()) {
         OutputFormatter::printError("Usage: wms queue <operation> [args...]");
@@ -165,7 +205,13 @@ int handleQueue(WmsControllers& wms, const CLIOptions& options) {
     return 0;
 }
 
-// Main command dispatch
+/**
+ * @brief Main command dispatch function that routes commands to appropriate handlers
+ * @param wms Reference to the WMS controller
+ * @param options The CLI options containing command information
+ * @param autosave Flag indicating whether to save after operations
+ * @return 0 on success, 1 on failure
+ */
 int mainCommandLoop(WmsControllers& wms, const CLIOptions& options, bool autosave) {
     if (options.command == "add") {
         return handleAdd(wms, options, autosave);
@@ -201,6 +247,12 @@ int mainCommandLoop(WmsControllers& wms, const CLIOptions& options, bool autosav
     }
 }
 
+/**
+ * @brief Main entry point of the CLI application
+ * @param argc Number of command line arguments
+ * @param argv Array of command line argument strings
+ * @return 0 on success, 1 on failure
+ */
 int main(int argc, char* argv[]) {
     CLIParser parser(argc, argv);          // Create parser instance
     CLIOptions options = parser.parse();  // Parse arguments
@@ -247,8 +299,10 @@ int main(int argc, char* argv[]) {
     INTERACTIVE MODE FALLBACK
 ============================================*/
 
-
-// start interactive mode 
+/**
+ * @brief Runs the interactive command-line interface mode
+ * @return 0 on successful exit, 1 on failure
+ */
 int runInteractiveMode() {
     OutputFormatter::printLogo();
 
@@ -270,7 +324,7 @@ int runInteractiveMode() {
 
         if (input.empty()) continue;
 
-        // Simple command parsing
+        // Parse command and arguments
         vector<string> args;
         stringstream ss(input);
         string token;

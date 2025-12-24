@@ -12,9 +12,9 @@ using namespace std;
 /*==========================================
     INITIALIZATION + SAVE SYSTEM
 ============================================*/
-
+// Initialize system: load inventory from storage
 bool WmsControllers::initializeSystem() {
-    if (!storage.intializeStorage()) {
+    if (!storage.initializeStorage()) {
         cerr << "[ERROR] Could not initialize storage file!" << endl;
         return false;
     }
@@ -30,6 +30,7 @@ bool WmsControllers::initializeSystem() {
 
     return true;
 }
+// Save current inventory to storage
 void WmsControllers::saveAll() {
     const string csvData = inventory.toCSV(storage.getFilePath());
     if (storage.writeAll(csvData)) {
@@ -38,11 +39,11 @@ void WmsControllers::saveAll() {
         cerr << "[ERROR] Failed to save inventory data!" << endl;
     }
 }
-
+//search item in inventory by ID
 Item* WmsControllers::searchItemInInventory(int itemId) {
     return inventory.findItem(itemId);
 }
-
+//list all items in inventory
 void WmsControllers::listInventoryItems() {
     inventory.displayItems();
 }
@@ -52,20 +53,20 @@ bool WmsControllers::addItem(int id, const std::string& name, int quantity, cons
     if (inventory.findItem(id)) {
         return false;
     }
-
+    // Validate quantity
     if (quantity < 0) {
         return false;
     }
-
+    //adding item to inventory
     inventory.addItem({id, name, quantity, location});
     return true;
 }
-
+//remove item from inventory
 bool WmsControllers::removeItem(int id) {
     if (!inventory.findItem(id)) {
         return false;
     }
-
+    
     inventory.removeItem(id);
     return true;
 }
@@ -75,7 +76,7 @@ bool WmsControllers::removeItem(int id) {
 /*==========================================
         ENHANCED QUEUE SYSTEM 2.1
 ==========================================*/
-
+// Constructors
 WmsControllers::WmsControllers(const std::string& storageFilePath) 
     : inventory(storageFilePath), storage(storageFilePath) {
     // Initialize command mapping
@@ -92,7 +93,7 @@ WmsControllers::WmsControllers(const std::string& storageFilePath)
         return this->handleSearch(params); 
     };
 }
-
+// Process all tasks in the queue
 void WmsControllers::enqueueTask(const std::string& task) {
     std::vector<std::string> tokens = split(task, ' ');
     if (!tokens.empty()) {
@@ -111,18 +112,18 @@ void WmsControllers::enqueueAddTask(int id, const std::string& name,
     taskQueue.push(Task("ADD", params));
     if (!silent) std::cout << "[QUEUED] ADD " << id << " " << name << " " << quantity << " " << location << std::endl;
 }
-
+// Enqueue remove task
 void WmsControllers::enqueueRemoveTask(int id, bool silent) {
     std::vector<std::string> params = {std::to_string(id)};
     taskQueue.push(Task("REMOVE", params));
     if (!silent) std::cout << "[QUEUED] REMOVE " << id << std::endl;
 }
-
+// Enqueue list task
 void WmsControllers::enqueueListTask(bool silent) {
     taskQueue.push(Task("LIST", {}));
     if (!silent) std::cout << "[QUEUED] LIST" << std::endl;
 }
-
+// Enqueue search task
 void WmsControllers::enqueueSearchTask(int id, bool silent) {
     std::vector<std::string> params = {std::to_string(id)};
     taskQueue.push(Task("SEARCH", params));
@@ -136,7 +137,7 @@ std::vector<std::string> WmsControllers::split(const std::string& s, char delim)
     std::vector<std::string> parts;
     std::string temp;
     std::stringstream ss(s);
-
+    // Split and trim
     while (std::getline(ss, temp, delim)) {
         if (!temp.empty()) {
             // Trim whitespace
@@ -175,12 +176,12 @@ bool WmsControllers::handleAdd(const std::vector<std::string>& params) {
         std::cout << "[FAILED] Usage: ADD <id> <name> <qty> <location>\n";
         return false;
     }
-
+    // Validate numeric fields
     if (!validateNumeric(params[0]) || !validateNumeric(params[2])) {
         std::cout << "[FAILED] Invalid numeric value\n";
         return false;
     }
-
+    // Parse parameters and add item
     try {
         int id = std::stoi(params[0]);
         int quantity = std::stoi(params[2]);
@@ -208,18 +209,18 @@ bool WmsControllers::handleAdd(const std::vector<std::string>& params) {
         return false;
     }
 }
-
+// Handle remove command
 bool WmsControllers::handleRemove(const std::vector<std::string>& params) {
     if (params.size() != 1) {
         std::cout << "[FAILED] Usage: REMOVE <id>\n";
         return false;
     }
-
+    // Validate numeric ID 
     if (!validateNumeric(params[0])) {
         std::cout << "[FAILED] Invalid ID\n";
         return false;
     }
-
+    // Parse ID and remove item
     try {
         int id = std::stoi(params[0]);
         
@@ -236,17 +237,17 @@ bool WmsControllers::handleRemove(const std::vector<std::string>& params) {
         return false;
     }
 }
-
+// Handle list command
 bool WmsControllers::handleList(const std::vector<std::string>& params) {
     if (!params.empty()) {
         std::cout << "[FAILED] Usage: LIST (no parameters needed)\n";
         return false;
     }
-    
+    // Display all items
     inventory.displayItems();
     return true;
 }
-
+// Handle search command
 bool WmsControllers::handleSearch(const std::vector<std::string>& params) {
     if (params.size() != 1) {
         std::cout << "[FAILED] Usage: SEARCH <id>\n";
@@ -257,7 +258,7 @@ bool WmsControllers::handleSearch(const std::vector<std::string>& params) {
         std::cout << "[FAILED] Invalid ID\n";
         return false;
     }
-
+    // Parse ID and search item
     try {
         int id = std::stoi(params[0]);
         Item* item = inventory.findItem(id);
@@ -289,7 +290,7 @@ void WmsControllers::processTasks() {
 
     int processedCount = 0;
     int failedCount = 0;
-
+    // Process each task
     while (!taskQueue.empty()) {
         Task task = taskQueue.front();
         taskQueue.pop();
@@ -299,7 +300,7 @@ void WmsControllers::processTasks() {
             std::cout << " " << param;
         }
         std::cout << std::endl;
-
+        // Find and execute command
         auto it = commandMap.find(task.command);
         if (it != commandMap.end()) {
             if (it->second(task.parameters)) {

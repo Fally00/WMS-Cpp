@@ -17,7 +17,7 @@
 - [x] Add detailed comments to Item.h and Item.cpp
 - [x] Add detailed comments to Receipt.h and Receipt.cpp
 - [x] Add detailed comments to cli.h and cli.cpp
-- [ ] Add detailed comments to main.cpp
+- [x] Add detailed comments to main.cpp
 
 ## Step 4: Followup
 - [x] Compile and test the code
