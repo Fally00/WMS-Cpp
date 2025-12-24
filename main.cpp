@@ -16,20 +16,203 @@ using namespace std;
     CLI MAIN ENTRY POINT
 ============================================*/
 
+// Forward declarations
 int runInteractiveMode();
+void printItem(const Item& item);
+
+// Helper function to print an item
+void printItem(const Item& item) {
+    cout << "ID: " << item.getId() << ", Name: " << item.getName()
+         << ", Quantity: " << item.getQuantity() << ", Location: " << item.getLocation() << endl;
+}
+
+// Helper function to safely parse integers
+int parseInt(const string& str, const string& paramName) {
+    try {
+        return stoi(str);
+    } catch (const invalid_argument&) {
+        OutputFormatter::printError("Invalid numeric input for " + paramName);
+        throw;
+    }
+}
+
+// Helper function to validate argument count
+bool validateArgCount(const CLIOptions& options, size_t expectedCount, const string& usage) {
+    if (options.positionalArgs.size() < expectedCount) {
+        OutputFormatter::printError("Usage: " + usage);
+        return false;
+    }
+    return true;
+}
+
+// Separate handler functions for better organization
+int handleAdd(WmsControllers& wms, const CLIOptions& options, bool autosave) {
+    if (!validateArgCount(options, 4, "wms add <id> <name> <quantity> <location>")) {
+        return 1;
+    }
+
+    try {
+        int id = parseInt(options.positionalArgs[0], "ID");
+        string name = options.positionalArgs[1];
+        int quantity = parseInt(options.positionalArgs[2], "quantity");
+        string location = options.positionalArgs[3];
+
+        // Check if item already exists
+        if (wms.searchItemInInventory(id)) {
+            OutputFormatter::printError("Item with ID " + to_string(id) + " already exists");
+            return 1;
+        }
+
+        if (wms.addItem(id, name, quantity, location)) {
+            OutputFormatter::printSuccess("Item added successfully");
+            if (autosave) wms.saveAll();
+        } else {
+            OutputFormatter::printError("Failed to add item");
+            return 1;
+        }
+    } catch (const invalid_argument&) {
+        return 1; // Error already printed by parseInt
+    }
+    return 0;
+}
+
+int handleRemove(WmsControllers& wms, const CLIOptions& options, bool autosave) {
+    if (!validateArgCount(options, 1, "wms remove <id>")) {
+        return 1;
+    }
+
+    try {
+        int id = parseInt(options.positionalArgs[0], "ID");
+        if (wms.removeItem(id)) {
+            OutputFormatter::printSuccess("Item removed successfully");
+            if (autosave) wms.saveAll();
+        } else {
+            OutputFormatter::printError("Item not found");
+            return 1;
+        }
+    } catch (const invalid_argument&) {
+        return 1;
+    }
+    return 0;
+}
+
+int handleFind(WmsControllers& wms, const CLIOptions& options) {
+    if (!validateArgCount(options, 1, "wms find <id>")) {
+        return 1;
+    }
+
+    try {
+        int id = parseInt(options.positionalArgs[0], "ID");
+        Item* item = wms.searchItemInInventory(id);
+        if (item) {
+            OutputFormatter::printInfo("Item found:");
+            printItem(*item);
+        } else {
+            OutputFormatter::printError("Item not found");
+            return 1;
+        }
+    } catch (const invalid_argument&) {
+        return 1;
+    }
+    return 0;
+}
+
+int handleQueue(WmsControllers& wms, const CLIOptions& options) {
+    if (options.positionalArgs.empty()) {
+        OutputFormatter::printError("Usage: wms queue <operation> [args...]");
+        return 1;
+    }
+
+    string operation = options.positionalArgs[0];
+
+    if (operation == "add") {
+        if (options.positionalArgs.size() < 5) {
+            OutputFormatter::printError("Usage: wms queue add <id> <name> <quantity> <location>");
+            return 1;
+        }
+
+        try {
+            int id = parseInt(options.positionalArgs[1], "ID");
+            string name = options.positionalArgs[2];
+            int quantity = parseInt(options.positionalArgs[3], "quantity");
+            string location = options.positionalArgs[4];
+            wms.enqueueAddTask(id, name, quantity, location);
+            OutputFormatter::printSuccess("Add operation queued");
+        } catch (const std::invalid_argument&) {
+            OutputFormatter::printError("Invalid numeric input for ID or quantity");
+            return 1;
+        }
+    }
+    else if (operation == "remove") {
+        if (options.positionalArgs.size() < 2) {
+            OutputFormatter::printError("Usage: wms queue remove <id>");
+            return 1;
+        }
+
+        try {
+            int id = parseInt(options.positionalArgs[1], "ID");
+            wms.enqueueRemoveTask(id);
+            OutputFormatter::printSuccess("Remove operation queued");
+        } catch (const std::invalid_argument&) {
+            OutputFormatter::printError("Invalid numeric input for ID");
+            return 1;
+        }
+    }
+    else {
+        OutputFormatter::printError("Invalid queue operation: " + operation);
+        return 1;
+    }
+    return 0;
+}
+
+// Main command dispatch
+int mainCommandLoop(WmsControllers& wms, const CLIOptions& options, bool autosave) {
+    if (options.command == "add") {
+        return handleAdd(wms, options, autosave);
+    }
+    else if (options.command == "remove") {
+        return handleRemove(wms, options, autosave);
+    }
+    else if (options.command == "find") {
+        return handleFind(wms, options);
+    }
+    else if (options.command == "list") {
+        wms.listInventoryItems();
+        return 0;
+    }
+    else if (options.command == "queue") {
+        return handleQueue(wms, options);
+    }
+    else if (options.command == "process") {
+        wms.processTasks();
+        OutputFormatter::printSuccess("Tasks processed");
+        if (autosave) wms.saveAll();
+        return 0;
+    }
+    else if (options.command == "save") {
+        wms.saveAll();
+        OutputFormatter::printSuccess("Data saved");
+        return 0;
+    }
+    else {
+        OutputFormatter::printError("Unknown command: " + options.command);
+        OutputFormatter::printInfo("Use 'wms --help' for available commands");
+        return 1;
+    }
+}
 
 int main(int argc, char* argv[]) {
-    CLIParser parser(argc, argv);
-    CLIOptions options = parser.parse();
+    CLIParser parser(argc, argv);          // Create parser instance
+    CLIOptions options = parser.parse();  // Parse arguments
 
-    if (options.showVersion) {
+    if (options.showVersion) {           // Show version info
         OutputFormatter::printVersion();
         std::cout << "\nPress Enter to exit...";
         std::cin.get();
         return 0;
     }
 
-    if (options.showHelp) {
+    if (options.showHelp) {          // Show help info
         OutputFormatter::printHelp();
         return 0;
     }
@@ -39,9 +222,9 @@ int main(int argc, char* argv[]) {
         return runInteractiveMode();
     }
 
-    OutputFormatter::printLogo();
+    OutputFormatter::printLogo();         // Print logo at start
 
-    WmsControllers wms("inventory_data.csv");
+    WmsControllers wms("inventory_data.csv");      // Initialize WMS controller
     if (!wms.initializeSystem()) {
         OutputFormatter::printError("System initialization failed.");
         std::cout << "\nPress Enter to exit...";
@@ -57,130 +240,15 @@ int main(int argc, char* argv[]) {
         OutputFormatter::printInfo("Autosave enabled");
     }
 
-    // Handle commands
-    if (options.command == "add") {
-        if (options.positionalArgs.size() < 4) {
-            OutputFormatter::printError("Usage: wms add <id> <name> <quantity> <location>");
-            return 1;
-        }
-
-        int id = stoi(options.positionalArgs[0]);
-        string name = options.positionalArgs[1];
-        int quantity = stoi(options.positionalArgs[2]);
-        string location = options.positionalArgs[3];
-
-        // Check if item already exists
-        if (wms.searchItemInInventory(id)) {
-            OutputFormatter::printError("Item with ID " + to_string(id) + " already exists");
-            return 1;
-        }
-
-        if (wms.addItem(id, name, quantity, location)) {
-            OutputFormatter::printSuccess("Item added successfully");
-            if (autosave) wms.saveAll();
-        } else {
-            OutputFormatter::printError("Failed to add item");
-        }
-    }
-    else if (options.command == "remove") {
-        if (options.positionalArgs.size() < 1) {
-            OutputFormatter::printError("Usage: wms remove <id>");
-            return 1;
-        }
-
-        int id = stoi(options.positionalArgs[0]);
-        if (wms.removeItem(id)) {
-            OutputFormatter::printSuccess("Item removed successfully");
-            if (autosave) wms.saveAll();
-        } else {
-            OutputFormatter::printError("Item not found");
-        }
-    }
-    else if (options.command == "find") {
-        if (options.positionalArgs.size() < 1) {
-            OutputFormatter::printError("Usage: wms find <id>");
-            return 1;
-        }
-
-        int id = stoi(options.positionalArgs[0]);
-        Item* item = wms.searchItemInInventory(id);
-        if (item) {
-            OutputFormatter::printInfo("Item found:");
-            printItem(*item);
-        } else {
-            OutputFormatter::printError("Item not found");
-        }
-    }
-    else if (options.command == "list") {
-        wms.listInventoryItems();
-    }
-    else if (options.command == "queue") {
-        string operation = options.subcommand;
-        if (operation.empty()) {
-            if (options.positionalArgs.size() < 1) {
-                OutputFormatter::printError("Usage: wms queue <operation> [args...]");
-                return 1;
-            }
-            operation = options.positionalArgs[0];
-        }
-
-        if (operation == "add") {
-            if (options.positionalArgs.size() < 4) {
-                OutputFormatter::printError("Usage: wms queue add <id> <name> <quantity> <location>");
-                return 1;
-            }
-            try {
-                int id = stoi(options.positionalArgs[0]);
-                string name = options.positionalArgs[1];
-                int quantity = stoi(options.positionalArgs[2]);
-                string location = options.positionalArgs[3];
-                wms.enqueueAddTask(id, name, quantity, location);
-                OutputFormatter::printSuccess("Add operation queued");
-            } catch (const std::invalid_argument&) {
-                OutputFormatter::printError("Invalid numeric input for ID or quantity");
-                return 1;
-            }
-        }
-        else if (operation == "remove") {
-            if (options.positionalArgs.size() < 1) {
-                OutputFormatter::printError("Usage: wms queue remove <id>");
-                return 1;
-            }
-            try {
-                int id = stoi(options.positionalArgs[0]);
-                wms.enqueueRemoveTask(id);
-                OutputFormatter::printSuccess("Remove operation queued");
-            } catch (const std::invalid_argument&) {
-                OutputFormatter::printError("Invalid numeric input for ID");
-                return 1;
-            }
-        }
-        else {
-            OutputFormatter::printError("Invalid queue operation: " + operation);
-        }
-    }
-    else if (options.command == "process") {
-        wms.processTasks();
-        OutputFormatter::printSuccess("Tasks processed");
-        if (autosave) wms.saveAll();
-    }
-    else if (options.command == "save") {
-        wms.saveAll();
-        OutputFormatter::printSuccess("Data saved");
-    }
-    else {
-        OutputFormatter::printError("Unknown command: " + options.command);
-        OutputFormatter::printInfo("Use 'wms --help' for available commands");
-        return 1;
-    }
-
-    return 0;
+    return mainCommandLoop(wms, options, autosave);
 }
 
 /*==========================================
     INTERACTIVE MODE FALLBACK
 ============================================*/
 
+
+// start interactive mode 
 int runInteractiveMode() {
     OutputFormatter::printLogo();
 

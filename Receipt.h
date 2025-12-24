@@ -11,18 +11,15 @@ struct ReceiptItem {
     int quantity;
 };
 
-
 // Receipt class to manage purchased items
 class Receipt {
     public:
-        void addItem(const Item& item, int quantity);
-        void print() const;
-        void clear();
-        void saveToFile(const std::string& filename) const;
+        void addItem(const Item& item, int quantity);           //add an item to the receipt
+        void print() const;                                    //print the receipt to console
+        void clear();                                         //clear the receipt
+        void saveToFile(const std::string& filename) const;  //save receipt to a file in CSV format
     private:
-        std::vector<ReceiptItem> items;
-
-
+        std::vector<ReceiptItem> items;        //make a table with items in the receipt
     };
 
     

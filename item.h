@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 class Item {
+//defining class Item 
 private:
     int id;
     std::string name;

@@ -62,7 +62,7 @@ void Inventory::displayItems() const {
             item.getLocation()
         });
     }
-
+    // Use OutputFormatter to print table
     OutputFormatter::printTable(headers, rows);
 }
 

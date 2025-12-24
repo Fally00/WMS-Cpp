@@ -23,7 +23,7 @@ void Item::changeQuantity(int delta) {
     if (newQty < 0) {
         throw std::invalid_argument("Insufficient stock");
     }
-    setQuantity(newQty);
+    setQuantity(newQty);    /// Update quantity using setter
 }
 
 // CSV Serialization
@@ -35,8 +35,8 @@ std::string Item::toCSV() const {
 
 // CSV Deserialization
 Item Item::fromCSV(const std::string& csvLine) {
-    std::stringstream ss(csvLine);
-    std::string token;
+    std::stringstream ss(csvLine);        // String stream for parsing
+    std::string token;                   // Temporary string to hold each token
 
     int id = 0;
     std::string name;

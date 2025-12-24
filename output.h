@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <iostream>
-#include <iomanip>
+#include <string>         // for std::string  it does string handling
+#include <vector>        // for std::vector  it makes table rows
+#include <iostream>     // for std::cout  it does output to console
+#include <iomanip>     // for std::setw it does formatting 
 
 // ANSI color codes
 #define RESET   "\033[0m"
@@ -17,16 +17,17 @@
 
 class OutputFormatter {
 public:
-    static void printHeader(const std::string& title);
-    static void printSuccess(const std::string& message);
-    static void printError(const std::string& message);
-    static void printWarning(const std::string& message);
-    static void printInfo(const std::string& message);
+    static void printHeader(const std::string& title);          // Print section header
+    static void printSuccess(const std::string& message);      // Print success message
+    static void printError(const std::string& message);       // Print error message
+    static void printWarning(const std::string& message);    // Print warning message
+    static void printInfo(const std::string& message);      // Print info message
 
+    // Print data table
     static void printTable(const std::vector<std::string>& headers,
                           const std::vector<std::vector<std::string>>& rows);
 
-    static void printLogo();
-    static void printVersion();
-    static void printHelp();
+    static void printLogo();        // Print application logo 
+    static void printVersion();    // Print application version information
+    static void printHelp();      // Print help information 
 };

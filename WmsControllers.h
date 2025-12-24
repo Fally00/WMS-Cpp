@@ -17,23 +17,66 @@ struct Task {
         : command(cmd), parameters(params) {}
 };
 
+/**
+ * @class WmsControllers
+ * @brief Main controller class for the Warehouse Management System.
+ *
+ * The WmsControllers class orchestrates all warehouse operations, including
+ * inventory management, task queuing, and data persistence. It provides both
+ * direct method calls and queued task execution for flexible operation handling.
+ */
 class WmsControllers {
 private:
-    Inventory inventory;
-    Storage storage;
-    std::queue<Task> taskQueue;
-    
+    Inventory inventory; /**< The inventory management component. */
+    Storage storage; /**< The data storage component for persistence. */
+    std::queue<Task> taskQueue; /**< Queue for storing pending tasks. */
+
     // Command mapping for better extensibility
-    std::unordered_map<std::string, std::function<bool(const std::vector<std::string>&)>> commandMap;
+    std::unordered_map<std::string, std::function<bool(const std::vector<std::string>&)>> commandMap; /**< Maps command strings to handler functions. */
 
     // Helper methods
+    /**
+     * @brief Splits a string by a delimiter.
+     * @param s The string to split.
+     * @param delim The delimiter character.
+     * @return A vector of split strings.
+     */
     std::vector<std::string> split(const std::string& s, char delim);
+
+    /**
+     * @brief Validates if a string represents a numeric value.
+     * @param str The string to validate.
+     * @return True if the string is numeric, false otherwise.
+     */
     bool validateNumeric(const std::string& str);
-    
+
     // Command handlers
+    /**
+     * @brief Handles the add item command.
+     * @param params The parameters for the add operation.
+     * @return True if successful, false otherwise.
+     */
     bool handleAdd(const std::vector<std::string>& params);
+
+    /**
+     * @brief Handles the remove item command.
+     * @param params The parameters for the remove operation.
+     * @return True if successful, false otherwise.
+     */
     bool handleRemove(const std::vector<std::string>& params);
+
+    /**
+     * @brief Handles the list items command.
+     * @param params The parameters for the list operation.
+     * @return True if successful, false otherwise.
+     */
     bool handleList(const std::vector<std::string>& params);
+
+    /**
+     * @brief Handles the search item command.
+     * @param params The parameters for the search operation.
+     * @return True if successful, false otherwise.
+     */
     bool handleSearch(const std::vector<std::string>& params);
 
 public:

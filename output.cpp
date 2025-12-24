@@ -1,3 +1,12 @@
+/**
+ * @file output.cpp
+ * @brief Implementation of the OutputFormatter class methods.
+ *
+ * This file contains the implementation of static methods for the OutputFormatter class,
+ * providing functionality for formatted console output, including colored messages,
+ * tables, logos, and help information.
+ */
+
 #include "output.h"
 #include <algorithm>
 

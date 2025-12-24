@@ -13,7 +13,7 @@ void Receipt::addItem(const Item& item, int quantity) {
             return;
         }
     }
-    items.push_back({item.getId(), item.getName(), quantity});
+    items.push_back({item.getId(), item.getName(), quantity});      // Add new item
 }
 
 
@@ -21,14 +21,14 @@ void Receipt::addItem(const Item& item, int quantity) {
 // Print the receipt to console
 void Receipt::print() const {
     std::cout << "===== RECEIPT =====\n";
-    for (const auto& receiptItem : items) {
-        std::cout << "ID: " << receiptItem.id
+    for (const auto& receiptItem : items) {              // Print each item
+        std::cout << "ID: " << receiptItem.id 
                   << " | Name: " << receiptItem.name
                   << " | Quantity: " << receiptItem.quantity << "\n";
     }
     std::cout << "===================\n";
 }
-void Receipt::clear() {
+void Receipt::clear() {   // Clear the receipt
     items.clear();
 }
 
@@ -40,7 +40,7 @@ void Receipt::saveToFile(const std::string& filename) const {
         std::cerr << "Error opening file for writing: " << filename << "\n";
         return;
     }
-    for (const auto& receiptItem : items) {
+    for (const auto& receiptItem : items) {              // Write each item as CSV
         outFile << receiptItem.id << ","
                 << receiptItem.name << ","
                 << receiptItem.quantity << "\n";
